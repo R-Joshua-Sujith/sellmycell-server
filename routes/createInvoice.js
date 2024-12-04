@@ -35,11 +35,13 @@ function generateHeader(doc) {
         .fillColor("#444444")
         .fontSize(20)
         .fontSize(10)
-        .text("Rawat Market Rajpur Chungi", 200, 50, { align: "right" })
-        .text("Shamshabad Road Agra", 200, 65, { align: "right" })
-        .text("282001 (U.P) India", 200, 80, { align: "right" })
-        .text("+91 7017454520", 200, 95, { align: "right" })
-        .text("info@bechdu.in", 200, 110, { align: "right" })
+        .text("2nd Floor, RSMJ Tower,", 200, 50, { align: "right" })
+        .text("Post office,40th A Cross", 200, 50, { align: "right" })
+        .text("Road,Near Jayanagar", 200, 50, { align: "right" })
+        .text("9th Block, Kottapalya", 200, 50, { align: "right" })
+        .text("Bengaluru,Karnataka-560069 ", 200, 80, { align: "right" })
+        .text("+91 8310021990", 200, 95, { align: "right" })
+        .text("info@sellmycell.in", 200, 110, { align: "right" })
         .moveDown();
 }
 
