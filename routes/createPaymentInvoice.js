@@ -35,12 +35,12 @@ function generateHeader(doc) {
         .fontSize(20)
         .fontSize(10)
         .text("2nd Floor, RSMJ Tower,", 200, 50, { align: "right" })
-        .text("Post office,40th A Cross", 200, 50, { align: "right" })
-        .text("Road,Near Jayanagar", 200, 50, { align: "right" })
-        .text("9th Block, Kottapalya", 200, 50, { align: "right" })
-        .text("Bengaluru,Karnataka-560069 ", 200, 80, { align: "right" })
-        .text("+91 8310021990", 200, 95, { align: "right" })
-        .text("info@sellmycell.in", 200, 110, { align: "right" })
+        .text("Post Office, 40th A Cross", 200, 65, { align: "right" })
+        .text("Road, Near Jayanagar", 200, 80, { align: "right" })
+        .text("9th Block, Kottapalya", 200, 95, { align: "right" })
+        .text("Bengaluru, Karnataka-560069", 200, 110, { align: "right" })
+        .text("+91 8310021990", 200, 125, { align: "right" })
+        .text("info@sellmycell.in", 200, 140, { align: "right" })
         .moveDown();
 }
 

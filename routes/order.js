@@ -69,7 +69,7 @@ async function generateCustomID() {
     try {
         const sequenceValue = await getNextSequenceValue();
         console.log(sequenceValue)
-        return `SellMyCell${sequenceValue}`;
+        return `SMC${sequenceValue}`;
     } catch (error) {
         console.error(error);
         throw new Error("Failed to generate custom ID");
