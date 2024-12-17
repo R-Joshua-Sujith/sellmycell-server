@@ -6,7 +6,7 @@ const optionSchema = new mongoose.Schema({
 });
 
 const ItemSchema = new mongoose.Schema({
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String,required:true, unique: true },
     productImage: { type: String },
     basePrice: { type: Number },
     estimatedPrice: { type: Number },

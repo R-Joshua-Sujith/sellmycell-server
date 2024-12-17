@@ -367,6 +367,77 @@ router.delete('/delete-product/:productId', adminVerify, async (req, res) => {
     }
 });
 
+// router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), async (req, res) => {
+//     try {
+//         const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+//         const sheet = workbook.Sheets[workbook.SheetNames[0]];
+//         const excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+//         // Check for empty Excel data
+//         if (excelData.length === 0) {
+//             return res.status(400).json({ error: 'Excel data is empty.' });
+//         }
+//         const allHeaders = excelData[0];
+
+//         const dynamic = allHeaders.filter((item) => !['_id', 'categoryType', 'brandName', 'seriesName', 'model', 'variant', 'slug', 'basePrice', 'estimatedPrice', 'productImage', 'bestSelling'].includes(item));
+
+//         for (const row of excelData.slice(1)) {
+//             const uniqueIdentifier = row[0];
+//             const existingItem = await ProductModel.findOne({ _id: uniqueIdentifier })
+//             const dynamicOptions = [];
+//             let i = 11;
+//             for (let x of dynamic) {
+//                 dynamicOptions.push({
+//                     optionHeading: x,
+//                     optionValue: row[i]
+//                 })
+//                 i++;
+//             }
+//             if (existingItem) {
+//                 console.log(existingItem.variant)
+//                 console.log(existingItem.slug)
+//                 existingItem.categoryType = row[1].trim();
+//                 existingItem.brandName = row[2].trim();
+//                 existingItem.seriesName = row[3].trim();
+//                 existingItem.model = row[4].trim();
+//                 existingItem.variant = row[5].trim();
+//                 existingItem.slug = row[6].trim();
+//                 existingItem.basePrice = row[7];
+//                 existingItem.estimatedPrice = row[8]
+//                 existingItem.productImage = row[9];
+//                 existingItem.bestSelling = row[10];
+//                 existingItem.dynamicFields = dynamicOptions;
+
+//                 await existingItem.save();
+//             } else {
+//                 console.log(row[6])
+//                 const newProduct = new ProductModel({
+//                     categoryType: row[1]?.trim(),
+//                     brandName: row[2]?.trim(),
+//                     seriesName: row[3]?.trim(),
+//                     model: row[4]?.trim(),
+//                     variant: row[5]?.trim(),
+//                     slug: row[6]?.trim(),
+//                     basePrice: row[7],
+//                     estimatedPrice: row[8],
+//                     productImage: row[9],
+//                     bestSelling: row[10],
+//                     dynamicFields: dynamicOptions,
+//                 })
+//                 await newProduct.save();
+//             }
+//         }
+
+
+//         res.status(200).json({ message: 'Bulk upload successful' });
+//     } catch (error) {
+//         console.error('Error during bulk upload:', error.message);
+//         res.status(500).json({ error: 'Internal Server Error', details: error.message });
+//     }
+// });
+
+
+
 router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), async (req, res) => {
     try {
         const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
@@ -383,6 +454,12 @@ router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), asy
 
         for (const row of excelData.slice(1)) {
             const uniqueIdentifier = row[0];
+            // Skip if categoryType is empty (null, undefined, or empty string after trimming)
+            if (!row[1] || row[1].toString().trim() === '') {
+                console.log('Empty categoryType detected - ending processing');
+                break; // Exit the loop as we've reached the end of valid data
+            }
+
             const existingItem = await ProductModel.findOne({ _id: uniqueIdentifier })
             const dynamicOptions = [];
             let i = 11;
@@ -393,14 +470,14 @@ router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), asy
                 })
                 i++;
             }
+            
             if (existingItem) {
-
                 existingItem.categoryType = row[1].trim();
-                existingItem.brandName = row[2].trim();
-                existingItem.seriesName = row[3].trim();
-                existingItem.model = row[4].trim();
-                existingItem.variant = row[5].trim();
-                existingItem.slug = row[6];
+                existingItem.brandName = row[2]?.trim();
+                existingItem.seriesName = row[3]?.trim();
+                existingItem.model = row[4]?.trim();
+                existingItem.variant = row[5]?.trim();
+                existingItem.slug = row[6]?.trim();
                 existingItem.basePrice = row[7];
                 existingItem.estimatedPrice = row[8]
                 existingItem.productImage = row[9];
@@ -411,11 +488,11 @@ router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), asy
             } else {
                 const newProduct = new ProductModel({
                     categoryType: row[1].trim(),
-                    brandName: row[2].trim(),
-                    seriesName: row[3].trim(),
-                    model: row[4].trim(),
-                    variant: row[5].trim(),
-                    slug: row[6],
+                    brandName: row[2]?.trim(),
+                    seriesName: row[3]?.trim(),
+                    model: row[4]?.trim(),
+                    variant: row[5]?.trim(),
+                    slug: row[6]?.trim(),
                     basePrice: row[7],
                     estimatedPrice: row[8],
                     productImage: row[9],
@@ -426,14 +503,12 @@ router.post('/api/products/bulk-upload', adminVerify, upload.single('file'), asy
             }
         }
 
-
         res.status(200).json({ message: 'Bulk upload successful' });
     } catch (error) {
         console.error('Error during bulk upload:', error.message);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 });
-
 router.get('/api/products/bulk-download/:categoryType', adminVerify, async (req, res) => {
     try {
         // Fetch all products from the database
